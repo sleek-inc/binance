@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from 'axios';
+import { Axios, AxiosRequestConfig } from 'axios';
 
 import {
   ClassicPortfolioMarginAccount,
@@ -97,10 +97,11 @@ export class CoinMClient extends BaseRestClient {
     restClientOptions: RestClientOptions = {},
     requestOptions: AxiosRequestConfig = {},
     useTestnet?: boolean,
+    axiosSession?: Axios,
   ) {
     const clientId = useTestnet ? 'coinmtest' : 'coinm';
 
-    super(clientId, restClientOptions, requestOptions);
+    super(clientId, restClientOptions, requestOptions, axiosSession);
 
     this.clientId = clientId;
     return this;
