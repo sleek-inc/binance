@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from 'axios';
+import { Axios, AxiosRequestConfig } from 'axios';
 
 import {
   CancelPortfolioCMConditionalOrderReq,
@@ -129,8 +129,14 @@ export class PortfolioClient extends BaseRestClient {
   constructor(
     restClientOptions: RestClientOptions = {},
     requestOptions: AxiosRequestConfig = {},
+    axiosSession?: Axios,
   ) {
-    super(PORTFOLIO_MARGIN_BASE_URL_KEY, restClientOptions, requestOptions);
+    super(
+      PORTFOLIO_MARGIN_BASE_URL_KEY,
+      restClientOptions,
+      requestOptions,
+      axiosSession,
+    );
 
     this.clientId = this.getClientId();
 

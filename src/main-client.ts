@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from 'axios';
+import { Axios, AxiosRequestConfig } from 'axios';
 
 import {
   BasicAssetPaginatedParams,
@@ -552,8 +552,9 @@ export class MainClient extends BaseRestClient {
   constructor(
     restClientOptions: RestClientOptions = {},
     requestOptions: AxiosRequestConfig = {},
+    axiosSession?: Axios,
   ) {
-    super('spot1', restClientOptions, requestOptions);
+    super('spot1', restClientOptions, requestOptions, axiosSession);
     return this;
   }
 

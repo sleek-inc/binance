@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosRequestConfig, Method } from 'axios';
+import axios, { Axios, AxiosError, AxiosRequestConfig, Method } from 'axios';
 
 import { BinanceBaseUrlKey } from '../types/shared';
 import Beautifier from './beautifier';
@@ -38,6 +38,8 @@ export default abstract class BaseRestClient {
 
   private beautifier: Beautifier | undefined;
 
+  private axiosSession: Axios | undefined;
+
   public apiLimitTrackers: Record<ApiLimitHeader, number>;
 
   public apiLimitLastUpdated: number;
@@ -46,6 +48,7 @@ export default abstract class BaseRestClient {
     baseUrlKey: BinanceBaseUrlKey,
     options: RestClientOptions = {},
     requestOptions: AxiosRequestConfig = {},
+    axiosSession: Axios | undefined = undefined,
   ) {
     this.options = {
       recvWindow: 5000,
@@ -107,6 +110,8 @@ export default abstract class BaseRestClient {
       'x-mbx-order-count-1h': 0,
       'x-mbx-order-count-1d': 0,
     };
+
+    this.axiosSession = axiosSession;
   }
 
   abstract getServerTime(
@@ -186,6 +191,13 @@ export default abstract class BaseRestClient {
     isPrivate?: boolean,
     baseUrlOverride?: string,
   ): GenericAPIResponse {
+    let client: Axios;
+    if (this.axiosSession !== undefined) {
+      client = this.axiosSession;
+    } else {
+      client = axios.create();
+    }
+
     const timestamp = Date.now() + (this.getTimeOffset() || 0);
 
     if (isPrivate && (!this.key || !this.secret)) {
@@ -243,7 +255,8 @@ export default abstract class BaseRestClient {
     //   ),
     // );
 
-    return axios(options)
+    return client
+      .request(options)
       .then((response) => {
         this.updateApiLimitState(response.headers);
         if (response.status == 200) {

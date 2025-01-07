@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from 'axios';
+import { Axios, AxiosRequestConfig } from 'axios';
 
 import { FundingRate } from './types/coin';
 import {
@@ -101,9 +101,10 @@ export class USDMClient extends BaseRestClient {
     restClientOptions: RestClientOptions = {},
     requestOptions: AxiosRequestConfig = {},
     useTestnet?: boolean,
+    axiosClient?: Axios,
   ) {
     const clientId = useTestnet ? 'usdmtest' : 'usdm';
-    super(clientId, restClientOptions, requestOptions);
+    super(clientId, restClientOptions, requestOptions, axiosClient);
 
     this.clientId = clientId;
     return this;
